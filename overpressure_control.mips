@@ -1,0 +1,32 @@
+# **overpressure control**
+# made by chrisH aka bromandude
+
+## this code reads the pressure of a pressur-
+#eanalyzer
+## if it is over the limit of <OPres> 
+## a flashing light and a valve turned on
+## additionally an alarm gets set
+
+alias PAnalyzer d0#name connected devices d0-d5
+alias FLight d1
+alias OValve d2
+alias Alarm d3
+
+alias OPres r0#name needed registers r0-r15 
+alias PAnalyzerR r1
+
+move OPres 50000#write a value to a register
+
+idle: #flag
+yield#wait for 1 tick
+l PAnalyzerR PAnalyzer Pressure#read into register
+bgeal PAnalyzerR OPres pumpact#register>=storedval?
+s FLight On 0 #write to output
+s OValve On 0
+j idle #jump to flag
+
+pumpact:
+s FLight On 1
+s OValve On 1
+s Alarm Setting 1
+j idle

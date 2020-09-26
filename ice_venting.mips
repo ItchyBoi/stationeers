@@ -1,0 +1,35 @@
+# **ice venting**
+# made by chrisH aka bromandude
+
+alias IceGasSens d0
+alias IceVentmem d1
+alias IceSilo d2
+
+
+alias TmpPres r0
+alias MaxPres r1
+alias MinPres r2
+alias AlarmPres r3
+
+move MaxPres 60
+move MinPres 40
+move AlarmPres 100
+
+idle:
+yield
+l TmpPres IceGasSens Pressure
+bge TmpPres MaxPres venton #>=
+ble TmpPres MinPres ventoff #<=
+j idle
+
+venton:
+s IceVentmem Setting 1
+bge TmpPres AlarmPres silolock #>=
+j idle
+ventoff:
+s IceVentmem Setting 0
+s IceSilo Lock 0
+j idle
+silolock:
+s IceSilo Lock 1
+j idle

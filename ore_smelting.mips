@@ -1,0 +1,54 @@
+# **ore smelting**
+# made by chrisH aka bromandude
+
+## this code is for a conveyor arc furnace setup
+## it halts the conveyors if there is nothing 
+# on them
+## it locks the silo if there are more than 
+#xx maxores being processed. 
+#so the conveyor is never too full. 
+## if outostarts the furnaces
+## you need two batchwriters for
+# furnacemem and Conveyormem
+
+alias FurnaceMem d0
+alias OreSilo d1
+alias OreChute d2
+alias IngotChute d3
+alias ConveyorMem d4
+
+alias High r0
+alias Low r1
+alias OreChuteR r2
+alias IngotChuteR r3
+alias OreCounter r4
+alias MaxOres r5
+
+move High 1
+move Low 0
+move MaxOres 3
+
+idle:
+s FurnaceMem Setting High
+yield
+s FurnaceMem Setting Low
+yield
+
+l OreChuteR OreChute Setting#ExportCount 
+l IngotChuteR IngotChute Setting#ImportCount
+
+sub OreCounter OreChuteR IngotChuteR #x-y
+bge OreCounter MaxOres locksilo #>=
+s OreSilo Open High
+back:
+bne OreChuteR IngotChuteR startConveyor #!=
+s ConveyorMem Setting Low
+j idle
+
+startConveyor:
+s ConveyorMem Setting High
+j idle
+
+locksilo:
+s OreSilo Open Low
+j back

@@ -1,0 +1,54 @@
+# **ore gas venting**
+# made by chrisH aka bromandude
+
+alias OreGasSens d0
+alias OreGasVentmem d1
+alias OreGasValvemem d2
+alias OreFurnacemem d3
+
+alias TempMax r0
+alias TempMin r1
+alias TempAlarm r2
+alias TempTmp r3
+alias PresMax r4
+alias PresMin r5
+alias PresAlarm r6
+alias PresTmp r7
+
+move TempMax 383
+move TempMin 363
+move TempAlarm 423
+move PresMax 60
+move PresMin 40
+move PresAlarm 100
+
+idle:
+yield
+l TempTmp OreGasSens Temperature
+l PresTmp OreGasSens Pressure
+bge TempTmp TempMax valveon
+ble TempTmp TempMin valveoff
+back:
+bge PresTmp PresMax venton
+ble PresTmp PresMin ventoff
+j idle
+
+valveon:
+s OreGasValvemem Setting 1
+bge TempTmp TempAlarm furnaceoff
+j idle
+valveoff:
+s OreGasValvemem Setting 0
+s OreFurnacemem Setting 1
+j back
+venton:
+s OreGasVentmem Setting 1
+bge PresTmp PresAlarm furnaceoff
+j idle
+ventoff:
+s OreGasVentmem Setting 0
+j idle
+furnaceoff:
+s OreFurnacemem Setting 0
+s OreGasVentmem Setting 0
+j idle

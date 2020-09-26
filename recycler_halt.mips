@@ -1,0 +1,36 @@
+# **recycler halt**
+# made by chrisH aka bromandude
+
+## this code is a workaround for the bugged recycler
+## the recycler gets jammed if you put to 
+# much into it
+## the code needs a silo in front of the recycler
+## it outputs 1 item every XX seconds
+## if you want to change the time just change 
+#"resettime"
+
+alias Silo d0
+
+alias Tmp r0
+alias ResetTime r1
+alias High r2
+alias Low r3
+
+move Tmp 0
+move ResetTime 10
+move High 1
+move Low 0
+
+count:
+add Tmp Tmp 1
+yield # wait 0.5 sec
+yield
+bgeal Tmp ResetTime actsilo #>=
+j count
+
+actsilo:
+s Silo Open High
+yield
+s Silo Open Low
+move Tmp 0
+j count
