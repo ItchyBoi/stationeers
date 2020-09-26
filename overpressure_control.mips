@@ -5,6 +5,7 @@
 #eanalyzer
 ## if it is over the limit of <OPres> 
 ## a flashing light and a valve turned on
+## if its under the limit itll turn off
 ## additionally an alarm gets set
 
 alias PAnalyzer d0#name connected devices d0-d5

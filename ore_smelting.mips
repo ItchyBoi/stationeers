@@ -1,54 +1,47 @@
 # **ore smelting**
 # made by chrisH aka bromandude
 
-## this code is for a conveyor arc furnace setup
-## it halts the conveyors if there is nothing 
-# on them
-## it locks the silo if there are more than 
-#xx maxores being processed. 
-#so the conveyor is never too full. 
-## if outostarts the furnaces
-## you need two batchwriters for
-# furnacemem and Conveyormem
+alias OreSilo d0
+alias OreChute d1
+alias IngotChute d2
+alias ConveyorMem d3
 
-alias FurnaceMem d0
-alias OreSilo d1
-alias OreChute d2
-alias IngotChute d3
-alias ConveyorMem d4
+alias OreChuteR r0
+alias IngotChuteR r1
+alias OreCounter r2
+alias OreCounterLast r3
+alias MaxOres r4
 
-alias High r0
-alias Low r1
-alias OreChuteR r2
-alias IngotChuteR r3
-alias OreCounter r4
-alias MaxOres r5
-
-move High 1
-move Low 0
 move MaxOres 3
 
 idle:
-s FurnaceMem Setting High
 yield
-s FurnaceMem Setting Low
-yield
-
 l OreChuteR OreChute Setting#ExportCount 
 l IngotChuteR IngotChute Setting#ImportCount
+move OreCounterLast OreCounter
 
 sub OreCounter OreChuteR IngotChuteR #x-y
 bge OreCounter MaxOres locksilo #>=
-s OreSilo Open High
+ble OreCounter MaxOres opensilo #<=
 back:
-bne OreChuteR IngotChuteR startConveyor #!=
-s ConveyorMem Setting Low
-j idle
-
-startConveyor:
-s ConveyorMem Setting High
+bgtz OreCounter startconveyor #>0
+beqz OreCounter stopconveyor #==0
 j idle
 
 locksilo:
-s OreSilo Open Low
+bge OreCounterLast MaxOres back #>=
+s OreSilo Open 0
 j back
+opensilo:
+ble OreCounter MaxOres back #<=
+s OreSilo Open 1
+j back
+
+startconveyor:
+bgtz OreCounterLast idle #>0
+s ConveyorMem Setting 1
+j idle
+stopconveyor:
+beqz OreCounterLast idle #==0
+s ConveyorMem Setting 0
+j idle
