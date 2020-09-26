@@ -5,31 +5,47 @@ alias IceGasSens d0
 alias IceVentmem d1
 alias IceSilo d2
 
-
 alias TmpPres r0
-alias MaxPres r1
-alias MinPres r2
-alias AlarmPres r3
+alias TmpPresLast r1
+alias MaxPres r2
+alias MinPres r3
+alias AlarmPres r4
+alias TmpTimer r5
+alias Time r6
 
 move MaxPres 60
 move MinPres 40
 move AlarmPres 100
+move Time 60
 
 idle:
 yield
+yield
+add TmpTimer TmpTimer 1
+beq TmpTimer Time insertice
+move TmpPresLast TmpPres
 l TmpPres IceGasSens Pressure
-bge TmpPres MaxPres venton #>=
-ble TmpPres MinPres ventoff #<=
+bge TmpPres MaxPres venton
+ble TmpPres MinPres ventoff
 j idle
 
 venton:
+bge TmpPres AlarmPres lockandvent
+bge TmpPresLast MaxPres idle
 s IceVentmem Setting 1
-bge TmpPres AlarmPres silolock #>=
 j idle
 ventoff:
-s IceVentmem Setting 0
-s IceSilo Lock 0
+ble TmpPresLast MinPres idle
+s IceVentmem Setting 1
 j idle
-silolock:
+lockandvent:
 s IceSilo Lock 1
+s IceVentmem Setting 1
+move TmpTimer Time
+j idle
+insertice:
+s IceSilo Lock 0
+yield
+s IceSilo Lock 1
+move TmpTimer 0
 j idle
