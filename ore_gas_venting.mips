@@ -9,11 +9,13 @@ alias OreFurnacemem d3
 alias TempMax r0
 alias TempMin r1
 alias TempAlarm r2
-alias TempTmp r3
-alias PresMax r4
-alias PresMin r5
-alias PresAlarm r6
-alias PresTmp r7
+alias TmpTemp r3
+alias TmpTempLast r4
+alias PresMax r5
+alias PresMin r6
+alias PresAlarm r7
+alias TmpPres r8
+alias TmpPresLast r9
 
 move TempMax 383
 move TempMin 363
@@ -22,33 +24,61 @@ move PresMax 60
 move PresMin 40
 move PresAlarm 100
 
+s OreFurnacemem Setting 1
+
 idle:
 yield
-l TempTmp OreGasSens Temperature
-l PresTmp OreGasSens Pressure
-bge TempTmp TempMax valveon
-ble TempTmp TempMin valveoff
+move TmpPresLast TmpPres
+l TmpPres OreGasSens Pressure
+bge TmpPres PresMax venton
+ble TmpPres PresMin ventoff
 back:
-bge PresTmp PresMax venton
-ble PresTmp PresMin ventoff
+move TmpTempLast TmpTemp
+l TmpTemp OreGasSens Temperature
+bge TmpTemp TempMax valveon
+ble TmpTemp TempMin valveoff
+back2:
+bge TmpTemp TempAlarm furnaceoffT
+bge TmpPres PresAlarm furnaceoffP
+ble TmpTemp TempMin furnaceonT
+ble TmpPres PresMin furnaceonP
 j idle
 
-valveon:
-s OreGasValvemem Setting 1
-bge TempTmp TempAlarm furnaceoff
-j idle
-valveoff:
-s OreGasValvemem Setting 0
-s OreFurnacemem Setting 1
-j back
 venton:
+bge TmpTemp TempMin normal
+bge TmpTempLast TempMin continue
+normal:
+bge TmpTemp TempMax back
+bge TmpPresLast PresMax back
+continue:
 s OreGasVentmem Setting 1
-bge PresTmp PresAlarm furnaceoff
-j idle
+j back
 ventoff:
+ble TmpPresLast PresMin back
 s OreGasVentmem Setting 0
-j idle
-furnaceoff:
+j back
+valveon:
+bge TmpTempLast TempMax back2
+s OreGasValvemem Setting 1
+s OreGasVentmem Setting 0
+j back2
+valveoff:
+ble TmpTempLast TempMin back2
+s OreGasValvemem Setting 0
+j back2
+furnaceoffT:
+bge TmpTempLast TempAlarm idle
 s OreFurnacemem Setting 0
-s OreGasVentmem Setting 0
+j idle
+furnaceoffP:
+bge TmpPresLast PresAlarm idle
+s OreFurnacemem Setting 0
+j idle
+furnaceonT:
+ble TmpTempLast TempMin idle
+s OreFurnacemem Setting 1
+j idle
+furnaceonP:
+ble TmpPresLast PresMin idle
+s OreFurnacemem Setting 1
 j idle

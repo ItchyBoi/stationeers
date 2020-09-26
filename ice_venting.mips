@@ -22,8 +22,7 @@ s IceSilo Lock 1
 s IceVentmem Setting 0
 
 idle:
-yield
-yield
+sleep 1
 add TmpTimer TmpTimer 1
 beq TmpTimer Time insertice
 move TmpPresLast TmpPres
