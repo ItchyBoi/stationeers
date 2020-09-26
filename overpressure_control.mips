@@ -14,19 +14,27 @@ alias Alarm d3
 
 alias OPres r0#name needed registers r0-r15 
 alias PAnalyzerR r1
+alias PAnalyzerRlast r2
 
 move OPres 50000#write a value to a register
 
 idle: #flag
 yield#wait for 1 tick
+move PAnalyzerRlast PAnalyzerR
 l PAnalyzerR PAnalyzer Pressure#read into register
-bgeal PAnalyzerR OPres pumpact#register>=storedval?
-s FLight On 0 #write to output
-s OValve On 0
+bge PAnalyzerR OPres pumpact#register>=storedval?
+ble PAnalyzerR OPres pumpdeact#<=?
 j idle #jump to flag
 
 pumpact:
+bge PAnalyzerRlast OPres idle
 s FLight On 1
 s OValve On 1
 s Alarm Setting 1
+j idle
+
+pumpdeact:
+ble PAnalyzerRlast OPres idle
+s FLight On 0 #write to output
+s OValve On 0
 j idle
