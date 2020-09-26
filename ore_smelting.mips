@@ -33,7 +33,7 @@ bge OreCounterLast MaxOres back #>=
 s OreSilo Open 0
 j back
 opensilo:
-ble OreCounter MaxOres back #<=
+ble OreCounterLast 0 back #<=
 s OreSilo Open 1
 j back
 
