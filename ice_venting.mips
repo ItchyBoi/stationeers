@@ -18,6 +18,9 @@ move MinPres 40
 move AlarmPres 100
 move Time 60
 
+s IceSilo Lock 1
+s IceVentmem Setting 0
+
 idle:
 yield
 yield
@@ -36,9 +39,11 @@ s IceVentmem Setting 1
 j idle
 ventoff:
 ble TmpPresLast MinPres idle
-s IceVentmem Setting 1
+s IceVentmem Setting 0
+move TmpTimer 0
 j idle
 lockandvent:
+bge TmpPresLast AlarmPres idle
 s IceSilo Lock 1
 s IceVentmem Setting 1
 move TmpTimer Time
