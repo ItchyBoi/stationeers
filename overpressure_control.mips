@@ -19,6 +19,9 @@ alias PAnalyzerRlast r2
 
 move OPres 50000#write a value to a register
 
+s FLight On 0 #write to output
+s OValve On 0
+
 idle: #flag
 yield#wait for 1 tick
 move PAnalyzerRlast PAnalyzerR
