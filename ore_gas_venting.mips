@@ -1,13 +1,11 @@
 # **ore gas venting**
 # made by chrisH aka bromandude
-
 alias OreGasSens d0
 alias OreGasVentmem d1
 alias OreGasValvemem d2
 alias OreFurnace1 d3
 alias OreFurnace2 d4
 alias OreFurnace3 d5
-
 alias TempMax r0
 alias TempMin r1
 alias TempAlarm r2
@@ -24,18 +22,15 @@ alias TmpFurnaceSlot3 r12
 alias TmpFurnaceSlot1Last r13
 alias TmpFurnaceSlot2Last r14
 alias TmpFurnaceSlot3Last r15
-
 move TempMax 383
 move TempMin 363
 move TempAlarm 423
 move PresMax 60
 move PresMin 40
 move PresAlarm 100
-
 s OreFurnace1 On 1
 s OreFurnace2 On 1
 s OreFurnace3 On 1
-
 idle:
 yield
 move TmpFurnaceSlot1Last TmpFurnaceSlot1
@@ -65,7 +60,6 @@ bge TmpPres PresAlarm furnaceoffP
 ble TmpTemp TempMin furnaceonT
 ble TmpPres PresMin furnaceonP
 j idle
-
 ActivateFurnace1:
 bgtz TmpFurnaceSlot1Last rf1
 s OreFurnace1 Activate 1
