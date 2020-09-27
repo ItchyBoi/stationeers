@@ -12,6 +12,7 @@ alias MinPres r3
 alias AlarmPres r4
 alias TmpTimer r5
 alias Time r6
+alias TmpTemp r7
 
 move MaxPres 60
 move MinPres 40
@@ -27,6 +28,7 @@ add TmpTimer TmpTimer 1
 beq TmpTimer Time insertice
 move TmpPresLast TmpPres
 l TmpPres IceGasSens Pressure
+l TmpTemp IceGasSens Temperature
 bge TmpPres MaxPres venton
 ble TmpPres MinPres ventoff
 j idle
@@ -48,8 +50,11 @@ s IceVentmem Setting 1
 move TmpTimer Time
 j idle
 insertice:
+ble TmpPres 10 skip
+ble TmpTemp 283 skip
 s IceSilo Open 1
 yield
 s IceSilo Open 0
+skip:
 move TmpTimer 0
 j idle
