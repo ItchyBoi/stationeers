@@ -17,7 +17,7 @@ alias High r2
 alias Low r3
 
 move Tmp 0
-move ResetTime 10
+move ResetTime 60
 move High 1
 move Low 0
 

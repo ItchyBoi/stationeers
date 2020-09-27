@@ -18,7 +18,7 @@ move MinPres 40
 move AlarmPres 100
 move Time 60
 
-s IceSilo Open 1
+s IceSilo Open 0
 s IceVentmem Setting 0
 
 idle:
@@ -43,13 +43,13 @@ move TmpTimer 0
 j idle
 lockandvent:
 bge TmpPresLast AlarmPres idle
-s IceSilo Open 1
+s IceSilo Open 0
 s IceVentmem Setting 1
 move TmpTimer Time
 j idle
 insertice:
-s IceSilo Open 0
-yield
 s IceSilo Open 1
+yield
+s IceSilo Open 0
 move TmpTimer 0
 j idle
