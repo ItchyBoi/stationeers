@@ -4,7 +4,9 @@
 alias OreGasSens d0
 alias OreGasVentmem d1
 alias OreGasValvemem d2
-alias OreFurnacemem d3
+alias OreFurnace1 d3
+alias OreFurnace2 d4
+alias OreFurnace3 d5
 
 alias TempMax r0
 alias TempMin r1
@@ -16,6 +18,12 @@ alias PresMin r6
 alias PresAlarm r7
 alias TmpPres r8
 alias TmpPresLast r9
+alias TmpFurnaceSlot1 r10
+alias TmpFurnaceSlot2 r11
+alias TmpFurnaceSlot3 r12
+alias TmpFurnaceSlot1Last r13
+alias TmpFurnaceSlot2Last r14
+alias TmpFurnaceSlot3Last r15
 
 move TempMax 383
 move TempMin 363
@@ -24,61 +32,98 @@ move PresMax 60
 move PresMin 40
 move PresAlarm 100
 
-s OreFurnacemem Setting 1
+s OreFurnace1 On 1
+s OreFurnace2 On 1
+s OreFurnace3 On 1
 
 idle:
 yield
+move TmpFurnaceSlot1Last TmpFurnaceSlot1
+move TmpFurnaceSlot2Last TmpFurnaceSlot2
+move TmpFurnaceSlot3Last TmpFurnaceSlot3
+ls TmpFurnaceSlot1 OreFurnace1 0 Occupied
+ls TmpFurnaceSlot2 OreFurnace2 0 Occupied
+ls TmpFurnaceSlot3 OreFurnace3 0 Occupied
+bgtz TmpFurnaceSlot1 ActivateFurnace1
+bgtz TmpFurnaceSlot2 ActivateFurnace2
+bgtz TmpFurnaceSlot3 ActivateFurnace3
 move TmpPresLast TmpPres
 l TmpPres OreGasSens Pressure
 bge TmpPres PresMax venton
 ble TmpPres PresMin ventoff
-back:
 move TmpTempLast TmpTemp
 l TmpTemp OreGasSens Temperature
 bge TmpTemp TempMax valveon
 ble TmpTemp TempMin valveoff
-back2:
 bge TmpTemp TempAlarm furnaceoffT
 bge TmpPres PresAlarm furnaceoffP
 ble TmpTemp TempMin furnaceonT
 ble TmpPres PresMin furnaceonP
 j idle
 
+ActivateFurnace1:
+bgtz TmpFurnaceSlot1Last idle
+s OreFurnace1 Activate 1
+j idle
+ActivateFurnace2:
+bgtz TmpFurnaceSlot2Last idle
+s OreFurnace2 Activate 1
+j idle
+ActivateFurnace2:
+bgtz TmpFurnaceSlot2Last idle
+s OreFurnace2 Activate 1
+j idle
 venton:
 bge TmpTemp TempMin normal
 bge TmpTempLast TempMin continue
 normal:
-bge TmpTemp TempMax back
-bge TmpPresLast PresMax back
+bge TmpTemp TempMax idle
+bge TmpPresLast PresMax idle
 continue:
 s OreGasVentmem Setting 1
-j back
+j idle
 ventoff:
-ble TmpPresLast PresMin back
+ble TmpPresLast PresMin idle
 s OreGasVentmem Setting 0
-j back
+j idle
 valveon:
-bge TmpTempLast TempMax back2
+bge TmpTempLast TempMax idle
 s OreGasValvemem Setting 1
 s OreGasVentmem Setting 0
-j back2
+j idle
 valveoff:
-ble TmpTempLast TempMin back2
+ble TmpTempLast TempMin idle
 s OreGasValvemem Setting 0
-j back2
+j idle
 furnaceoffT:
 bge TmpTempLast TempAlarm idle
-s OreFurnacemem Setting 0
+s OreFurnace1 On 0
+s OreFurnace2 On 0
+s OreFurnace3 On 0
 j idle
 furnaceoffP:
 bge TmpPresLast PresAlarm idle
-s OreFurnacemem Setting 0
+s OreFurnace1 On 0
+s OreFurnace2 On 0
+s OreFurnace3 On 0
 j idle
 furnaceonT:
 ble TmpTempLast TempMin idle
-s OreFurnacemem Setting 1
+s OreFurnace1 On 1
+s OreFurnace2 On 1
+s OreFurnace3 On 1
+yield
+s OreFurnace1 Activate 1
+s OreFurnace2 Activate 1
+s OreFurnace3 Activate 1
 j idle
 furnaceonP:
 ble TmpPresLast PresMin idle
-s OreFurnacemem Setting 1
+s OreFurnace1 On 1
+s OreFurnace2 On 1
+s OreFurnace3 On 1
+yield
+s OreFurnace1 Activate 1
+s OreFurnace2 Activate 1
+s OreFurnace3 Activate 1
 j idle
