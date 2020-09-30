@@ -2,28 +2,25 @@
 # made by chrisH aka bromandude
 
 alias Sensor d0
-alias Transformer1 d1
-alias Transformer2 d2
-alias Transformer3 d3
-alias Transformer4 d4
+alias Lever d1
+alias Display d2
 
 alias MaxTemp r0
-alias TmpTemp r1
-alias TmpTempLast r2
+alias MinTemp r1
+alias TmpTemp r2
 
-move MaxTemp 773
+move MaxTemp 773 # = 500 C
+move MinTemp 573 # = 300 C
 
 idle:
-yield
-move TmpTempLast TmpTemp
+sleep 2
 l TmpTemp Sensor Temperature
 bge TmpTemp MaxTemp shutdown
 j idle
 
 shutdown:
-bge TmpTempLast MaxTemp idle
-s Transformer1 On 0
-s Transformer2 On 0
-s Transformer3 On 0
-s Transformer4 On 0
-j idle
+s Lever On 0
+sleep 2
+l TmpTemp Sensor Temperature
+ble TmpTemp MinTemp idle
+j shutdown
