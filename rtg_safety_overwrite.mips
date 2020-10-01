@@ -23,19 +23,19 @@ move MinTemp 573 # = 300 C
 operate:
 sleep 2
 move Power 0
-l Lever1mem Lever1 On
+l Lever1mem Lever1 Open
 beqz Lever1mem c1
 add Power Power 24
 c1:
-l Lever2mem Lever2 On
+l Lever2mem Lever2 Open
 beqz Lever2mem c2
 add Power Power 24
 c2:
-l Lever3mem Lever3 On
+l Lever3mem Lever3 Open
 beqz Lever3mem c3
 add Power Power 24
 c3:
-l Lever4mem Lever4 On
+l Lever4mem Lever4 Open
 beqz Lever4mem c4
 add Power Power 24
 c4:
@@ -45,15 +45,15 @@ bge TmpTemp MaxTemp shutdown
 j operate
 
 shutdown:
-l Lever1mem Lever1 On
-l Lever2mem Lever2 On
-l Lever3mem Lever3 On
-l Lever4mem Lever4 On
+l Lever1mem Lever1 Open
+l Lever2mem Lever2 Open
+l Lever3mem Lever3 Open
+l Lever4mem Lever4 Open
 idle:
-s Lever1 On 0
-s Lever2 On 0
-s Lever3 On 0
-s Lever4 On 0
+s Lever1 Open 0
+s Lever2 Open 0
+s Lever3 Open 0
+s Lever4 Open 0
 move Power 0
 s Display Setting Power
 sleep 2
@@ -62,8 +62,8 @@ ble TmpTemp MinTemp startup
 j idle
 
 startup:
-s Lever1 On Lever1mem
-s Lever2 On Lever2mem
-s Lever3 On Lever3mem
-s Lever4 On Lever4mem
+s Lever1 Open Lever1mem
+s Lever2 Open Lever2mem
+s Lever3 Open Lever3mem
+s Lever4 Open Lever4mem
 j operate
