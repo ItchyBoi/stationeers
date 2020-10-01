@@ -26,19 +26,19 @@ move Power 0
 l Lever1mem Lever1 On
 beqz Lever1mem c1
 add Power Power 24
-c1
+c1:
 l Lever2mem Lever2 On
 beqz Lever2mem c2
 add Power Power 24
-c2
+c2:
 l Lever3mem Lever3 On
 beqz Lever3mem c3
 add Power Power 24
-c3
+c3:
 l Lever4mem Lever4 On
 beqz Lever4mem c4
 add Power Power 24
-c4
+c4:
 s Display Setting Power
 l TmpTemp Sensor Temperature
 bge TmpTemp MaxTemp shutdown
