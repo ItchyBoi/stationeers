@@ -1,0 +1,79 @@
+# **rtg power display**
+# made by chrisH aka bromandude
+
+alias AnalyA d0
+alias AnalyB d1
+alias AnalyC d2
+alias DisplA d3
+alias DisplB d4
+alias DisplC d5
+
+alias ProdPowerA r0
+alias ProdPowerB r1
+alias ProdPowerC r2
+alias ConsPowerA r3
+alias ConsPowerB r4
+alias ConsPowerC r5
+alias LeftPowerA r6
+alias LeftPowerB r7
+alias LeftPowerC r8
+
+#s DisplA Color 6
+s DisplA Mode 2 #mode [W]
+s DisplB Mode 2
+s DisplC Mode 2
+
+main:
+sleep 2
+l ConsPowerA AnalyA PowerActual
+l ConsPowerB AnalyB PowerActual
+l ConsPowerC AnalyC PowerActual
+l ProdPowerA AnalyA PowerPotential
+l ProdPowerB AnalyB PowerPotential
+l ProdPowerC AnalyC PowerPotential
+s DisplA Setting ProdPowerA
+s DisplB Setting ProdPowerB
+s DisplC Setting ProdPowerC
+sub LeftPowerA ProdPowerA ConsPowerA
+sub LeftPowerB ProdPowerB ConsPowerB
+sub LeftPowerC ProdPowerC ConsPowerC
+bgtz LeftPowerA greenA
+bltz LeftPowerA redA
+beqz LeftPowerA blueA
+retA:
+bgtz LeftPowerB greenB
+beqz LeftPowerB blueB
+bltz LeftPowerB redB
+retB:
+bgtz LeftPowerC greenC
+bltz LeftPowerC redC
+beqz LeftPowerC blueC
+j main
+
+greenA:
+s DisplA Color 2
+j retA
+greenB:
+s DisplB Color 2
+j retB
+greenC:
+s DisplC Color 2
+j main
+redA:
+s DisplA Color 4
+j retA
+redB:
+s DisplB Color 4
+j retB
+redC:
+s DisplC Color 4
+j main
+blueA:
+s DisplA Color 0
+j retA
+blueB:
+s DisplB Color 0
+j retB
+blueC:
+s DisplC Color 0
+j main
