@@ -6,7 +6,6 @@ alias Lever1 d1
 alias Lever2 d2
 alias Lever3 d3
 alias Lever4 d4
-alias Display d5
 
 alias MaxTemp r0
 alias MinTemp r1
@@ -15,31 +14,12 @@ alias Lever1mem r3
 alias Lever2mem r4
 alias Lever3mem r5
 alias Lever4mem r6
-alias Power r7
 
 move MaxTemp 773 # = 500 C
 move MinTemp 573 # = 300 C
 
 operate:
 sleep 2
-move Power 0
-l Lever1mem Lever1 Open
-beqz Lever1mem c1
-add Power Power 24
-c1:
-l Lever2mem Lever2 Open
-beqz Lever2mem c2
-add Power Power 24
-c2:
-l Lever3mem Lever3 Open
-beqz Lever3mem c3
-add Power Power 24
-c3:
-l Lever4mem Lever4 Open
-beqz Lever4mem c4
-add Power Power 24
-c4:
-s Display Setting Power
 l TmpTemp Sensor Temperature
 bge TmpTemp MaxTemp shutdown
 j operate
@@ -54,8 +34,6 @@ s Lever1 Open 0
 s Lever2 Open 0
 s Lever3 Open 0
 s Lever4 Open 0
-move Power 0
-s Display Setting Power
 sleep 2
 l TmpTemp Sensor Temperature
 ble TmpTemp MinTemp startup
