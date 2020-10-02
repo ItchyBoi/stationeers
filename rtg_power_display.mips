@@ -24,9 +24,9 @@ s DisplC Mode 2
 
 main:
 sleep 2
-l ConsPowerA AnalyA PowerActual
-l ConsPowerB AnalyB PowerActual
-l ConsPowerC AnalyC PowerActual
+l ConsPowerA AnalyA PowerRequired
+l ConsPowerB AnalyB PowerRequired
+l ConsPowerC AnalyC PowerRequired
 l ProdPowerA AnalyA PowerPotential
 l ProdPowerB AnalyB PowerPotential
 l ProdPowerC AnalyC PowerPotential
