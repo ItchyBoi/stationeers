@@ -18,7 +18,6 @@ alias LeftPowerA r6
 alias LeftPowerB r7
 alias LeftPowerC r8
 
-#s DisplA Color 6
 s DisplA Mode 2 #mode [W]
 s DisplB Mode 2
 s DisplC Mode 2
