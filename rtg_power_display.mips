@@ -36,14 +36,17 @@ s DisplC Setting ProdPowerC
 sub LeftPowerA ProdPowerA ConsPowerA
 sub LeftPowerB ProdPowerB ConsPowerB
 sub LeftPowerC ProdPowerC ConsPowerC
+beqz ConsPowerA blueA
 bgtz LeftPowerA greenA
 bltz LeftPowerA redA
 beqz LeftPowerA blueA
 retA:
+beqz ConsPowerB blueB
 bgtz LeftPowerB greenB
 beqz LeftPowerB blueB
 bltz LeftPowerB redB
 retB:
+beqz ConsPowerC blueC
 bgtz LeftPowerC greenC
 bltz LeftPowerC redC
 beqz LeftPowerC blueC
