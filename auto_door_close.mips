@@ -1,0 +1,17 @@
+# **auto door close**
+# made by chrisH aka bromandude
+
+alias Door d0
+
+alias Doormem r1
+
+main:
+yield
+l Doormem Door Open
+bgtz Doormem closedoor
+j main
+
+closedoor:
+sleep 10
+s Door Open 0
+j main
