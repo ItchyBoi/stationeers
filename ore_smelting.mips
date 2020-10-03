@@ -2,46 +2,28 @@
 # made by chrisH aka bromandude
 
 alias OreSilo d0
-alias OreChute d1
-alias IngotChute d2
-alias ConveyorMem d3
+alias OreFurnace1 d1
+alias OreFurnace2 d2
+alias OreFurnace3 d3
 
-alias OreChuteR r0
-alias IngotChuteR r1
-alias OreCounter r2
-alias OreCounterLast r3
-alias MaxOres r4
+alias Counter r0
+alias TmpFurnace
 
-move MaxOres 3
-
-idle:
-yield
-l OreChuteR OreChute Setting#ExportCount 
-l IngotChuteR IngotChute Setting#ImportCount
-move OreCounterLast OreCounter
-
-sub OreCounter OreChuteR IngotChuteR #x-y
-bge OreCounter MaxOres locksilo #>=
-ble OreCounter MaxOres opensilo #<=
-back:
-bgtz OreCounter startconveyor #>0
-beqz OreCounter stopconveyor #==0
-j idle
-
-locksilo:
-bge OreCounterLast MaxOres back #>=
-s OreSilo Open 0
-j back
-opensilo:
-ble OreCounterLast 0 back #<=
 s OreSilo Open 1
-j back
 
-startconveyor:
-bgtz OreCounterLast idle #>0
-s ConveyorMem Setting 1
-j idle
-stopconveyor:
-beqz OreCounterLast idle #==0
-s ConveyorMem Setting 0
-j idle
+main:
+sleep 2
+l TmpFurnace OreFurnace1 Reagents
+beqz TmpFurnace opensilo
+l TmpFurnace OreFurnace2 Reagents
+beqz TmpFurnace opensilo
+l TmpFurnace OreFurnace3 Reagents
+beqz TmpFurnace opensilo
+
+opensilo:
+yield
+s OreSilo Open 1
+yield
+s OreSilo Open 0
+sleep 10
+j main
