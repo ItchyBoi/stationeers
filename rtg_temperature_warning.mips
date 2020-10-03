@@ -1,0 +1,44 @@
+# **rtg temperature warning**
+# made by chrisH aka bromandude
+
+alias SensorA d0
+alias FLightA d1
+alias Speakermem d2
+alias Speaker d3
+
+alias MaxTemp r0
+alias MinTemp r1
+alias TmpSpeakermem r2
+alias TmpTemp r3
+
+
+move MaxTemp 773 # = 500 C
+move MinTemp 573 # = 300 C
+
+idle:
+sleep 2
+l TmpTemp SensorA Temperature
+bge TmpTemp MaxTemp enwarning
+j idle
+
+enwarning:
+s FLightA On 1
+l TmpSpeakermem Speakermem Setting
+add TmpSpeakermem TmpSpeakermem 1
+s Speakermem Setting TmpSpeakermem
+s Speaker On 1
+operate:
+sleep 2
+l TmpTemp SensorA Temperature
+ble TmpTemp MinTemp dewarning
+j operate
+dewarning:
+s FLightA On 0
+l TmpSpeakermem Speakermem Setting
+sub TmpSpeakermem TmpSpeakermem 1
+s Speakermem Setting TmpSpeakermem
+beqz TmpSpeakermem deactspeaker
+j idle
+deactspeaker:
+s Speaker On 0
+j idle
