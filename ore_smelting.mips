@@ -6,10 +6,9 @@ alias OreFurnace1 d1
 alias OreFurnace2 d2
 alias OreFurnace3 d3
 
-alias Counter r0
 alias TmpFurnace
 
-s OreSilo Open 1
+s OreSilo Open 0
 
 main:
 sleep 2
