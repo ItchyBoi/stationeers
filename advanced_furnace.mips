@@ -1,0 +1,128 @@
+alias Dial d0
+alias Lever d1
+alias LEDFurnace d2
+alias Furnace d3
+alias WasteAmount r6
+move r7 -1
+move sp 5       ### Astroloy: Dial 0 ###
+push 412924554 # hash for Astroloy ingot
+push 5000 # min pressure
+push 6000 # max pressure
+push 1200 # min temperature
+push 1400 # max temperature
+move sp 15      ### Hastelloy: Dial 1 ###
+push 1579842814
+push 2500 # min pressure
+push 3000 # max pressure
+push 950  # min temperature
+push 1000 # max temperature
+move sp 25      ### Inconel: Dial 2 ###
+push -787796599
+push 4250 # min pressure
+push 4750 # max pressure
+push 1150 # min temperature
+push 1250 # max temperature
+move sp 35      ### Waspaloy: Dial 3 ###
+push 156348098
+push 1250 # min pressure
+push 2750 # max pressure
+push 875  # min temperature
+push 1000 # max temperature
+move sp 45      ### Stellite: Dial 4 ###
+push -1897868623
+push 4000 # min pressure
+push 5000 # max pressure
+push 1700 # min temperature
+push 1900 # max temperature
+move sp 55      ### Invar: Dial 5 ###
+push -297990285
+push 6000 # min pressure
+push 7000 # max pressure
+push 1200 # min temperature
+push 2000 # max temperature
+move sp 61      ### Other Alloys: Dial 6 ###
+push 1058547521 # hash for Constantan ingot
+push 502280180  # hash for Electrum ingot
+push -82508479  # hash for Solder ingot
+push -654790771 # hash for Steel ingot
+push -983091249 # hash for ores(Cobalt)
+push 800  # min pressure
+push 2400 # max pressure
+push 1000 # min temperature
+push 1500 # max temperature
+main: # initial state
+move r10 0 # reset fuel throughput
+s Furnace SettingInput 0
+s Furnace SettingOutput 0
+s Dial Mode 6
+idle:
+yield
+jal getState # load parameters
+l r0 Lever Open
+s Furnace Open 0
+s Furnace On r0
+s LEDFurnace On r0
+beqz r0 idle
+smelting:
+s Furnace Activate 1
+l r9 Furnace Pressure
+l r8 Furnace Temperature
+slt r2 r9 r15
+slt r3 r8 r13
+or r2 r2 r3 # is press or temp lower than need?..
+brnez WasteAmount 2
+add r10 r10 3
+select r10 r2 r10 0 # let's check and
+s Furnace SettingInput r10 # add fuel if need
+beqzal r10 getWasteAmount # now let's check
+s Furnace SettingOutput WasteAmount #and dump waste
+sgt r0 r9 r14
+sge r1 r8 r12
+or r0 r0 r1 # is press or temp higher than need?
+nor r4 r0 r2 # is both press and temp are suitable?
+select r4 r4 2 4 # green when "ready" else red
+ls r0 Furnace 0 Occupied
+select r4 r0 5 r4 # yellow while furnace melts
+s LEDFurnace Color r4
+l r4 Furnace RecipeHash
+jal getIngotHash
+seq r4 r4 r11 # check if furnace contains alloy
+l r0 Lever Open # shutdown when Lever "off"
+nor r1 r0 0
+or r4 r4 r1 # also eject if going to shutdown
+s Furnace Open r4
+beq r0 0 main # exit because of Lever "off"
+l r4 Dial Setting # reload state on Dial change
+bne r4 r7 idle
+yield
+j smelting
+getState:
+l r0 Dial Setting
+beq r0 r7 getIngotHash # compare with old dial value
+move r7 r0
+mul sp r7 10 # offset cursor for the record
+add sp sp 10 # cursor to beginning of the record
+pop r12 # max temperature
+pop r13 # min temperature
+pop r14 # max pressure
+pop r15 # min pressure
+getIngotHash:
+pop r11 # ingot hash
+s db Setting r11 # show recipe
+bnez r11 ra
+move sp 6  # fix Stuck After Game Restarts
+peek r11   # bug in stack implementation
+beqz r11 0 # I wish devs will fix it someday...
+mul sp r7 10
+add sp sp 6
+j getIngotHash
+getWasteAmount:
+ble r8 0 ra
+div r3 r12 r14 # target factor
+div r4 r8 r9 # current factor
+sub r4 r3 r4 # diff from factors
+mul WasteAmount r4 1000 # furnace volume 1000L
+floor WasteAmount WasteAmount
+min WasteAmount WasteAmount 100 # no more than
+max WasteAmount WasteAmount 0#and shouldn't be less
+j ra
