@@ -1,0 +1,38 @@
+alias silo d0
+alias furnace d1
+alias pump d2
+
+alias TmpPres r0
+alias TmpPresLast r1
+alias Timer r2
+alias ResetTime r3
+
+move ResetTime 10
+
+main:
+yield
+s furnace Activate 1
+yield
+s furnace Activate 0
+
+l TmpPres furnace Pressure
+
+add Timer Timer 1
+bge Timer ResetTime reset
+j main
+
+reset:
+beqz TmpPres nextice
+s pump On 1
+back:
+move Timer 0
+move TmpPresLast TmpPres
+j main
+
+nextice:
+bgtz TmpPresLast back
+s pump On 0
+s silo Open 1
+yield
+s silo Open 0
+j back
