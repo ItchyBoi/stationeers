@@ -1,6 +1,9 @@
 alias silo d0
 alias furnace d1
-alias pump d2
+alias pump1 d2
+alias pump2 d3
+alias pump3 d4
+alias pump4 d5
 
 alias TmpPres r0
 alias TmpPresLast r1
@@ -23,7 +26,10 @@ j main
 
 reset:
 beqz TmpPres nextice
-s pump On 1
+s pump1 On 1
+s pump2 On 1
+s pump3 On 1
+s pump4 On 1
 back:
 move Timer 0
 move TmpPresLast TmpPres
@@ -31,7 +37,10 @@ j main
 
 nextice:
 bgtz TmpPresLast back
-s pump On 0
+s pump1 On 0
+s pump2 On 0
+s pump3 On 0
+s pump4 On 0
 s silo Open 1
 yield
 s silo Open 0
