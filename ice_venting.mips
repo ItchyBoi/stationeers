@@ -50,7 +50,7 @@ s IceVentmem Setting 1
 move TmpTimer Time
 j idle
 insertice:
-ble TmpPres 10 skip
+ble TmpPres 1 skip
 ble TmpTemp 283 skip
 s IceSilo Open 1
 yield
