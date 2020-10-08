@@ -22,9 +22,9 @@ alias TmpFurnaceSlot3 r12
 alias TmpFurnaceSlot1Last r13
 alias TmpFurnaceSlot2Last r14
 alias TmpFurnaceSlot3Last r15
-move TempMax 383
-move TempMin 363
-move TempAlarm 423
+move TempMax 283
+move TempMin 263
+move TempAlarm 320
 move PresMax 60
 move PresMin 40
 move PresAlarm 100
