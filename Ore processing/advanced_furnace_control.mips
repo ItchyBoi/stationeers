@@ -1,39 +1,59 @@
-# credit goes to unkown 
-alias Lever d0
-alias LEDFurnace d1
-alias Furnace d2
-alias minpress d3
-alias maxpress d4
-alias mintemp d5
-alias maxtemp d6
+# credit goes to unkown superbrain
+alias LEDFurnace d0
+alias Furnace d1
+alias minpress d2
+alias maxpress d3
+alias mintemp d4
+alias maxtemp d5
 alias WasteAmount r6
-move r7 -1
 
-main: # initial state
-move r10 0 # reset fuel throughput
+# move sp 5 # ingot storage
+# push -404336834 # Copper
+# push 226410516 # Gold
+# push -1301215609 # Iron
+# push 2134647745 # Lead
+# push -1406385572 # Nickel
+# push -290196476 # Silicon
+# push -929742000 # Silver
+# push 1058547521 # Constantan
+# push 502280180 # Electrum
+# push -297990285 # Invar
+# push -82508479 # Solder
+# push -654790771 # Steel
+# push 412924554 # Astroloy
+# push 1579842814 # Hastelloy
+# push -787796599 # Inconel
+# push -1897868623 # Stellite
+# push 156348098 # Waspaloy
+
+
+idle:
 s Furnace SettingInput 0
 s Furnace SettingOutput 0
-idle:
-yield
-l r0 Lever Open
-s Furnace Open 0
+s Furnace Open r0
 s Furnace On r0
 s LEDFurnace On r0
-beqz r0 idle
-smelting:
-s Furnace Activate 1
-l r9 Furnace Pressure
-l r8 Furnace Temperature
+main:
+sleep 1
 l r12 maxtemp Setting # max temperature
 l r13 mintemp Setting # min temperature
 l r14 maxpress Setting # max pressure
 l r15 minpress Setting # min pressure
+sgtz r0 r12 #activate furnace if mem != 0
+beqz r0 idle
+
+s LEDFurnace On r0
+s Furnace On r0
+smelting:
+s Furnace Activate r0
+l r9 Furnace Pressure
+l r8 Furnace Temperature
+
 slt r2 r9 r15
 slt r3 r8 r13
 or r2 r2 r3 # is press or temp lower than need?..
 brnez WasteAmount 2
-add r10 r10 3
-select r10 r2 r10 0 # let's check and
+select r10 r2 10 0 # let's check and
 s Furnace SettingInput r10 # add fuel if need
 beqzal r10 getWasteAmount # now let's check
 s Furnace SettingOutput WasteAmount #and dump waste
@@ -45,18 +65,18 @@ select r4 r4 2 4 # green when "ready" else red
 ls r0 Furnace 0 Occupied
 select r4 r0 5 r4 # yellow while furnace melts
 s LEDFurnace Color r4
-l r4 Furnace RecipeHash
-jal getIngotHash
-seq r4 r4 r11 # check if furnace contains alloy
-l r0 Lever Open # shutdown when Lever "off"
-nor r1 r0 0
-or r4 r4 r1 # also eject if going to shutdown
-s Furnace Open r4
-beq r0 0 main # exit because of Lever "off"
-l r4 Dial Setting # reload state on Dial change
-bne r4 r7 idle
-yield
-j smelting
+#move sp 21
+#jal openmold
+#s Furnace Open r4
+j main
+
+# openmold:
+# l r4 Furnace RecipeHash
+# pop r11
+# beqz r11 ra
+# seq r4 r4 r11
+# beqz r4 openmold
+# j ra
 
 getWasteAmount:
 ble r8 0 ra
