@@ -40,7 +40,7 @@ push 1000
 push 55000
 push 900
 push 100000
-push -654790771 # hash for steel
+push -654790771
 
 move sp 55 # astroloy dail 5
 push 30000
