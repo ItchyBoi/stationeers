@@ -6,7 +6,7 @@ alias maxpress d3
 alias mintemp d4
 alias maxtemp d5
 alias WasteAmount r6
-#just a test
+#just a test2
 
 # move sp 5 # ingot storage
 # push -404336834 # Copper
