@@ -1,0 +1,60 @@
+move sp 5 # constantan dail 0
+push 1058547521 # hash for constantan
+push 20000 # min pressure
+push 55000 # max pressure
+push 1000 # min temperature
+push 100000 # max temperature
+move sp 15 # electrum dail 1
+push 502280180
+push 800
+push 2400
+push 600
+push 100000
+move sp 25 # invar dail 2
+push -297990285
+push 18000
+push 20000
+push 1200
+push 1500
+move sp 35 # solder dail 3
+push -82508479
+push 1000
+push 55000
+push 350
+push 550
+move sp 45 # steel and normal ingots dail 4
+push -654790771
+push 1000
+push 55000
+push 900
+push 100000
+move sp 55 # astroloy dail 5
+push 412924554
+push 30000
+push 40000
+push 1000
+push 10000
+move sp 65 # hastelloy dail 6
+push 1579842814
+push 25000
+push 30000
+push 950
+push 1000
+move sp 75 # inconel dail 7
+push -787796599
+push 23500
+push 24000
+push 600
+push 100000
+move sp 85 # stellite dail 8
+push -1897868623
+push 10000
+push 20000
+push 1800
+push 100000
+move sp 95 # waspaloy dail 9
+push 156348098
+push 50000
+push 55000
+push 400
+push 800

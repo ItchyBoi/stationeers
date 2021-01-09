@@ -1,0 +1,95 @@
+alias Dial d0
+alias Lever d1
+alias LEDFurnace d2
+alias Furnace d3
+alias coolvalve d4
+alias fuelvalve d5
+alias WasteAmount r6
+move r7 -1
+s Dial Mode 5
+s coolvalve On 1
+s fuelvalve On 1
+s Furnace SettingInput 100
+main: # initial state
+move r10 0 # reset fuel throughput
+s Furnace SettingOutput 0
+s coolvalve Setting 0
+s fuelvalve Setting 0
+idle:
+yield
+jal getState # load parameters
+l r0 Lever Open
+s Furnace Open 0
+s Furnace On r0
+s LEDFurnace On r0
+beqz r0 idle
+smelting:
+s Furnace Activate 1
+l r9 Furnace Pressure
+l r8 Furnace Temperature
+slt r2 r9 r15
+slt r3 r8 r13
+or r2 r2 r3 # is press or temp lower than need?..
+brnez WasteAmount 2
+add r10 r10 1
+select r10 r2 r10 0 # let's check and
+s fuelvalve Setting r10 # add fuel if need
+beqzal r10 getWasteAmount # now let's check
+s Furnace SettingOutput WasteAmount #and dump waste
+sgt r0 r9 r14
+sge r1 r8 r12
+bgeal r8 r12 coolfurnace # is temp to high?
+or r0 r0 r1 # is press or temp higher than need?
+nor r4 r0 r2 # is both press and temp are suitable?
+select r4 r4 2 4 # green when "ready" else red
+ls r0 Furnace 0 Occupied
+select r4 r0 5 r4 # yellow while furnace melts
+s LEDFurnace Color r4
+l r4 Furnace RecipeHash
+jal getIngotHash
+seq r4 r4 r11 # check if furnace contains alloy
+s Furnace Open r4
+l r0 Lever Open # shutdown when Lever "off"
+nor r1 r0 0
+or r4 r4 r1 # also eject if going to shutdown
+s Furnace Open r4
+beq r0 0 main # exit because of Lever "off"
+l r4 Dial Setting # reload state on Dial change
+bne r4 r7 idle
+yield
+j smelting
+getState:
+l r0 Dial Setting
+beq r0 r7 getIngotHash # compare with old dial value
+move r7 r0
+mul sp r7 10 # offset cursor for the record
+add sp sp 10 # cursor to beginning of the record
+pop r12 # max temperature
+pop r13 # min temperature
+pop r14 # max pressure
+pop r15 # min pressure
+getIngotHash:
+pop r11 # ingot hash
+s db Setting r11 # show recipe
+bnez r11 ra
+move sp 6  # fix Stuck After Game Restarts
+peek r11   # bug in stack implementation
+beqz r11 0 # I wish devs will fix it someday...
+mul sp r7 10
+add sp sp 6
+j getIngotHash
+getWasteAmount:
+ble r8 0 ra
+div r3 r12 r14 # target factor
+div r4 r8 r9 # current factor
+sub r4 r3 r4 # diff from factors
+mul WasteAmount r4 1000 # furnace volume 1000L
+floor WasteAmount WasteAmount
+min WasteAmount WasteAmount 100 # no more than
+max WasteAmount WasteAmount 0#and shouldn't be less
+j ra
+coolfurnace:
+s coolvalve Setting 100
+yield
+s coolvalve Setting 0
+j ra
