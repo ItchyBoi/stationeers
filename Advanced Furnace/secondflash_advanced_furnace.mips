@@ -4,9 +4,8 @@ alias LEDFurnace d2
 alias Furnace d3
 alias coolvalve d4
 alias fuelvalve d5
-alias WasteAmount r6
 move r7 -1
-s Dial Mode 5
+s Dial Mode 9
 s coolvalve On 1
 s fuelvalve On 1
 s Furnace SettingInput 100
@@ -30,15 +29,18 @@ l r8 Furnace Temperature
 slt r2 r9 r15
 slt r3 r8 r13
 or r2 r2 r3 # is press or temp lower than need?..
-brnez WasteAmount 2
-add r10 r10 1
-select r10 r2 r10 0 # let's check and
-s fuelvalve Setting r10 # add fuel if need
-beqzal r10 getWasteAmount # now let's check
-s Furnace SettingOutput WasteAmount #and dump waste
+move r6 0
+bleal r9 r15 addfuel # is press to low?
+bleal r8 r13 addfuel # is temp to low?
+s fuelvalve Setting r6
 sgt r0 r9 r14
 sge r1 r8 r12
+move r6 0
+bgeal r9 r14 dumpwaste # is press to high?
+s Furnace SettingOutput r6
+move r6 0
 bgeal r8 r12 coolfurnace # is temp to high?
+s coolvalve Setting r6
 or r0 r0 r1 # is press or temp higher than need?
 nor r4 r0 r2 # is both press and temp are suitable?
 select r4 r4 2 4 # green when "ready" else red
@@ -78,18 +80,12 @@ beqz r11 0 # I wish devs will fix it someday...
 mul sp r7 10
 add sp sp 6
 j getIngotHash
-getWasteAmount:
-ble r8 0 ra
-div r3 r12 r14 # target factor
-div r4 r8 r9 # current factor
-sub r4 r3 r4 # diff from factors
-mul WasteAmount r4 1000 # furnace volume 1000L
-floor WasteAmount WasteAmount
-min WasteAmount WasteAmount 100 # no more than
-max WasteAmount WasteAmount 0#and shouldn't be less
+addfuel:
+move r6 30
+j ra
+dumpwaste:
+move r6 20
 j ra
 coolfurnace:
-s coolvalve Setting 100
-yield
-s coolvalve Setting 0
+move r6 100
 j ra
