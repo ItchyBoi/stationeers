@@ -1,3 +1,7 @@
+# this is only the first part of 
+# the programm after this you need to
+# export secondflash on same ic-chip
+# credit goes to TryCatch
 move sp 5 # constantan dail 0
 push 1058547521 # hash for constantan
 push 20000 # min pressure

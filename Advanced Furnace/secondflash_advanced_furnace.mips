@@ -1,3 +1,6 @@
+# remember, this programm only works if
+# the firstpart ist already exported!!
+# credit goes to TryCatch
 alias Dial d0
 alias Lever d1
 alias LEDFurnace d2
@@ -26,15 +29,17 @@ smelting:
 s Furnace Activate 1
 l r9 Furnace Pressure
 l r8 Furnace Temperature
-slt r2 r9 r15
-slt r3 r8 r13
+slt r2 r9 r15 # is press to low?
+slt r3 r8 r13 # is temp to low?
 or r2 r2 r3 # is press or temp lower than need?..
 move r6 0
 bleal r9 r15 addfuel # is press to low?
 bleal r8 r13 addfuel # is temp to low?
 s fuelvalve Setting r6
-sgt r0 r9 r14
-sge r1 r8 r12
+sgt r0 r9 r14 # is press to high?
+sge r1 r8 r12 # is temp to high?
+and r5 r0 r3 # is press to high & tamp to low?
+bgtal r5 0 flushsystem
 move r6 0
 bgeal r9 r14 dumpwaste # is press to high?
 s Furnace SettingOutput r6
@@ -89,3 +94,13 @@ j ra
 coolfurnace:
 move r6 100
 j ra
+flushsystem:
+s LEDFurnace Color 4
+s coolvalve Setting 0
+s fuelvalve Setting 0
+s Furnace SettingOutput 100
+flushing:
+l r9 Furnace Pressure
+yield
+blt r9 5 ra
+j flushing
