@@ -1,0 +1,13 @@
+alias vert_sensor d0
+alias hori_sensor d1
+alias vert_mem d2
+alias hori_mem d3
+main:
+l r0 hori_sensor Horizontal
+s hori_mem Setting r0
+l r0 vert_sensor Vertical
+sub r0 r0 15
+div r0 r0 1.5
+s vert_mem Setting r0
+yield
+j maind

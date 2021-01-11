@@ -1,0 +1,39 @@
+alias solarpanel d0
+alias hor_mem d1
+alias ver_mem d2
+
+idle:
+s solarpanel Vertical 0
+s solarpanel Horizontal 0
+sleep 5
+main:
+yield
+l r0 solarpanel Charge
+beqz r0 idle
+
+l r2 solarpanel Vertical
+add r3 r2 3
+s solarpanel Vertical r3
+l r1 solarpanel Charge
+bgt r1 r0 ver_found
+sub r3 r2 3
+s solarpanel Vertical r3
+l r1 solarpanel Charge
+bgt r1 r0 ver_found
+s solarpanel Vertical r2
+ver_found:
+
+l r0 solarpanel Charge
+
+l r4 solarpanel Horizontal
+add r6 r4 3
+s solarpanel Horizontal r6
+l r5 solarpanel Charge
+bgt r5 r0 hor_found
+sub r6 r4 3
+s solarpanel Horizontal r6
+l r5 solarpanel Charge
+bgt r5 r0 hor_found
+s solarpanel Horizontal r4
+hor_found:
+j main
