@@ -2,38 +2,46 @@ alias solarpanel d0
 alias hor_mem d1
 alias ver_mem d2
 
+l r7 solarpanel Vertical # wakeupstate
+l r8 solarpanel Horizontal
+
 idle:
-s solarpanel Vertical 0
-s solarpanel Horizontal 0
-sleep 5
+s solarpanel Vertical r7
+s solarpanel Horizontal r8
 main:
 yield
 l r0 solarpanel Charge
 beqz r0 idle
 
 l r2 solarpanel Vertical
-add r3 r2 3
+add r3 r2 1
 s solarpanel Vertical r3
+sleep 1
 l r1 solarpanel Charge
 bgt r1 r0 ver_found
-sub r3 r2 3
+sub r3 r2 1
 s solarpanel Vertical r3
+sleep 1
 l r1 solarpanel Charge
 bgt r1 r0 ver_found
 s solarpanel Vertical r2
+sleep 1
 ver_found:
 
 l r0 solarpanel Charge
 
 l r4 solarpanel Horizontal
-add r6 r4 3
+add r6 r4 1
 s solarpanel Horizontal r6
+sleep 1
 l r5 solarpanel Charge
 bgt r5 r0 hor_found
-sub r6 r4 3
+sub r6 r4 1
 s solarpanel Horizontal r6
+sleep 1
 l r5 solarpanel Charge
 bgt r5 r0 hor_found
 s solarpanel Horizontal r4
+sleep 1
 hor_found:
 j main
