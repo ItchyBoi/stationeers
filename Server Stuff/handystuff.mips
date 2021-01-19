@@ -1,0 +1,23 @@
+
+docker
+nload
+htop
+
+#docker commandlist
+
+docker exec <container> <command> #sends 'command' to 'container'
+docker run -it <image> #starts 'image' and jumps into commandline from image
+docker system prune #delete all stopped containers and images without a container
+
+/var/lib/docker/volumes
+
+
+
+
+docker run --detach --name stationeers2 --publish 27500:27500/udp --publish 27015:27015/udp -v /root/docker-stationeers:/ hetsh/stationeers
+
+docker run --detach --publish 27500:27500/udp --publish 27015:27015/udp -v /root/docker-stationeers:/stationeers hetsh/stationeers
+
+docker run --mount type=bind,source=/path/to/storage,target=/stationeers ...
+-v ~/docker-stationeers:/test
+docker run --mount type=bind,source=~/docker-stationeers,target=/stationeers4
