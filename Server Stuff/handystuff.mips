@@ -12,4 +12,4 @@ docker volume create --name test #creates volume with name test
 
 /var/lib/docker/volumes
 
-docker run --env WORLD_TYPE=Loulan --env WORLD_NAME=Loulantest --detach --publish 27500:27500/udp --publish 27015:27015/udp -v stationfiles:/stationeers hetsh/stationeers
+docker run --env WORLD_TYPE=Loulan --env WORLD_NAME=fullgazserver --detach --publish 27500:27500 --publish 27500:27500/udp --publish 27015:27015/udp -v stationfiles:/stationeers hetsh/stationeers
