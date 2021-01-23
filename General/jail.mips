@@ -1,0 +1,35 @@
+# this code is for the spawnjail
+alias door d0
+# d1 - d3 are the dails to enter the code
+alias key d4 # memory to store the key
+alias lever d5
+
+reset:
+s door Lock 1
+s door Open 0
+s d1 Setting 0
+s d2 Setting 0
+s d3 Setting 0
+
+main:
+l r0 key Setting
+l r1 d1 Setting 
+l r2 d2 Setting 
+l r3 d3 Setting 
+l r4 lever Open
+mul r1 r1 100
+mul r2 r2 10
+add r2 r2 r3
+add r1 r1 r2
+beq r1 r0 open
+beq r4 1 open
+sleep 1
+j main
+
+open:
+s lever Open 1
+s door Open 1
+sleep 2
+l r4 lever Open
+beq r4 0 reset
+j open
